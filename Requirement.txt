@@ -5,3 +5,4 @@ scikit-learn
 nimpy
 matplotlib
 imbalanced-learn
+sklearn
