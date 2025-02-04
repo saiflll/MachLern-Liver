@@ -1,7 +1,6 @@
-import pickle
 import streamlit as st
 import pandas as pd
-import sklearn.neighbors as neighbors  # Mengimpor modul neighbors dari sklearn
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
@@ -19,10 +18,9 @@ def user_input_features():
     Alamine_Aminotransferase = st.sidebar.number_input("Alamine Aminotransferase 100-2000", 10, 2000, 100)
     Aspartate_Aminotransferase = st.sidebar.number_input("Aspartate Aminotransferase 10-3000", 10, 3000, 100)
     Total_Protiens = st.sidebar.number_input("Total Protiens 2-10", 2.0, 10.0, 6.0)
-    Albumin = st.sidebar.number_input("Albumin 2-6", 2.0, 6.0, 4.0)
-    Albumin_and_Globulin_Ratio = st.sidebar.number_input("Albumin and Globulin Ratio 0-3", 0.1, 2.5, 1.0)
+    Albumin = st.sidebar.number_input("Albumin 2-6 ", 2.0, 6.0, 4.0)
+    Albumin_and_Globulin_Ratio = st.sidebar.number_input("Albumin and Globulin Ratio 0-3 ", 0.1, 2.5, 1.0)
     
-    # Mengembalikan data sebagai dictionary (atau DataFrame jika diperlukan)
     data = {
         'Age': Age,
         'Gender': Gender,
@@ -35,13 +33,37 @@ def user_input_features():
         'Albumin': Albumin,
         'Albumin_and_Globulin_Ratio': Albumin_and_Globulin_Ratio
     }
-    return data
+    features = pd.DataFrame(data, index=[0])
+    return features
 
-# Contoh penggunaan input
-input_data = user_input_features()
-st.write("Data input:", input_data)
+df = user_input_features()
 
-# Contoh inisialisasi model dengan KNeighborsClassifier
-model = neighbors.KNeighborsClassifier()
+# Tampilkan input pengguna
+st.subheader('Input Parameters')
+st.write(df)
 
-# Lanjutkan dengan logika training/prediksi model...
+# Load dataset
+liver_data = pd.read_csv('Data Pasien penyakit liver.csv')  # Ganti dengan nama file dataset penyakit liver Anda
+
+# Preprocessing
+X = liver_data.drop(columns='Dataset')
+y = liver_data['Dataset']
+
+# Standardisasi data
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+df = scaler.transform(df)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Inisialisasi dan latih model KNN
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+# Prediksi
+prediction = knn.predict(df)
+
+# Tampilkan hasil prediksi
+st.subheader('Hasil Prediksi')
+st.write('Penyakit Liver' if prediction[0] == 1 else 'Tidak Ada Penyakit Liver')
