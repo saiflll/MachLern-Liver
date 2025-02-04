@@ -19,7 +19,7 @@ def user_input_features():
     Aspartate_Aminotransferase = st.sidebar.number_input("Aspartate Aminotransferase 10-3000", 10, 3000, 100)
     Total_Protiens = st.sidebar.number_input("Total Protiens 2-10", 2.0, 10.0, 6.0)
     Albumin = st.sidebar.number_input("Albumin 2-6 ", 2.0, 6.0, 4.0)
-    Albumin_and_Globulin_Ratio = st.sidebar.number_input("Albumin and Globulin Ratio 0-3 ", 0.1, 2.5, 1.0)
+    Albumin_and_Globulin_Ratio = st.sidebar.number_input("Albumin and Globulin Ratio 0-2.5 ", 0.1, 2.5, 1.0)
     
     data = {
         'Age': Age,
